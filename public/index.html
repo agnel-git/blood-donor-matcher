@@ -6,20 +6,32 @@
 </head>
 <body>
 
-<h1>🩸 Emergency Blood Donor Matcher</h1>
+<header>
+    <h1>🩸 Emergency Blood Donor Matcher</h1>
+    <p>Connecting lives in real time</p>
+</header>
 
-<h2>Register as Donor</h2>
-<input type="text" id="name" placeholder="Name">
-<input type="text" id="bloodGroup" placeholder="Blood Group (A+, O-, etc)">
-<input type="text" id="location" placeholder="City">
-<button onclick="registerDonor()">Register</button>
+<div class="container">
 
-<h2>Find Donor</h2>
-<input type="text" id="searchBlood" placeholder="Blood Group">
-<input type="text" id="searchLocation" placeholder="City">
-<button onclick="findDonor()">Search</button>
+    <div class="card">
+        <h2>Register as Donor</h2>
+        <input type="text" id="name" placeholder="Name">
+        <input type="text" id="bloodGroup" placeholder="Blood Group (A+, O-, etc)">
+        <input type="text" id="location" placeholder="City">
+        <button onclick="registerDonor()">Register</button>
+        <p id="registerMsg" class="msg"></p>
+    </div>
 
-<div id="results"></div>
+    <div class="card">
+        <h2>Find Donor</h2>
+        <input type="text" id="searchBlood" placeholder="Blood Group">
+        <input type="text" id="searchLocation" placeholder="City">
+        <button onclick="findDonor()">Search</button>
+    </div>
+
+    <div id="results" class="results"></div>
+
+</div>
 
 <script src="script.js"></script>
 </body>

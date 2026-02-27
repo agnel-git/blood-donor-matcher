@@ -3,23 +3,24 @@ async function registerDonor() {
     const bloodGroup = document.getElementById('bloodGroup').value;
     const location = document.getElementById('location').value;
 
+    const msg = document.getElementById('registerMsg');
+    msg.innerText = "Registering...";
+
     await fetch('/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            name,
-            bloodGroup,
-            location,
-            available: true
-        })
+        body: JSON.stringify({ name, bloodGroup, location, available: true })
     });
 
-    alert("Registered Successfully!");
+    msg.innerText = "✅ Registered Successfully!";
 }
 
 async function findDonor() {
     const bloodGroup = document.getElementById('searchBlood').value;
     const location = document.getElementById('searchLocation').value;
+
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.innerHTML = "🔍 Searching donors...";
 
     const res = await fetch('/find', {
         method: 'POST',
@@ -28,16 +29,21 @@ async function findDonor() {
     });
 
     const data = await res.json();
-
-    const resultsDiv = document.getElementById('results');
     resultsDiv.innerHTML = "";
 
     if (data.length === 0) {
-        resultsDiv.innerHTML = "No donors found.";
+        resultsDiv.innerHTML = "<p>No donors found.</p>";
         return;
     }
 
     data.forEach(donor => {
-        resultsDiv.innerHTML += `<p>${donor.name} - ${donor.bloodGroup} - ${donor.location}</p>`;
+        const card = document.createElement('div');
+        card.className = "donor-card";
+        card.innerHTML = `
+            <strong>${donor.name}</strong><br>
+            🩸 Blood Group: ${donor.bloodGroup}<br>
+            📍 Location: ${donor.location}
+        `;
+        resultsDiv.appendChild(card);
     });
 }
