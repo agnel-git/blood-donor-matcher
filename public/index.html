@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Emergency Blood Donor Matcher</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>🩸 Emergency Blood Donor Matcher</h1>
+
+<h2>Register as Donor</h2>
+<input type="text" id="name" placeholder="Name">
+<input type="text" id="bloodGroup" placeholder="Blood Group (A+, O-, etc)">
+<input type="text" id="location" placeholder="City">
+<button onclick="registerDonor()">Register</button>
+
+<h2>Find Donor</h2>
+<input type="text" id="searchBlood" placeholder="Blood Group">
+<input type="text" id="searchLocation" placeholder="City">
+<button onclick="findDonor()">Search</button>
+
+<div id="results"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
