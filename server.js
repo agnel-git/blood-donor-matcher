@@ -1,48 +1,40 @@
+require('dotenv').config();
 const express = require('express');
+const mongoose = require('mongoose');
 const cors = require('cors');
-const bodyParser = require('body-parser');
-const fs = require('fs');
+const path = require('path');
+
+const authRoutes = require('./routes/auth');
+const donorRoutes = require('./routes/donors');
+const hospitalRoutes = require('./routes/hospitals');
 
 const app = express();
+
+// Middleware
 app.use(cors());
-app.use(bodyParser.json());
-app.use(express.static('public'));
+app.use(express.json());
 
-const PORT = 3000;
+// Serve static frontend
+app.use(express.static(path.join(__dirname, '../frontend/public')));
 
-// Load donors
-function loadDonors() {
-    const data = fs.readFileSync('donors.json');
-    return JSON.parse(data);
-}
+// API Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/donors', donorRoutes);
+app.use('/api/hospitals', hospitalRoutes);
 
-// Save donors
-function saveDonors(donors) {
-    fs.writeFileSync('donors.json', JSON.stringify(donors, null, 2));
-}
-
-// Register donor
-app.post('/register', (req, res) => {
-    const donors = loadDonors();
-    donors.push(req.body);
-    saveDonors(donors);
-    res.json({ message: "Donor Registered Successfully" });
+// Catch-all: serve index.html for any non-API route
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/public/index.html'));
 });
 
-// Find donor
-app.post('/find', (req, res) => {
-    const { bloodGroup, location } = req.body;
-    const donors = loadDonors();
-
-    const matches = donors.filter(d =>
-        d.bloodGroup === bloodGroup &&
-        d.location.toLowerCase() === location.toLowerCase() &&
-        d.available === true
-    );
-
-    res.json(matches);
-});
-
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => {
+    console.log('✅ Connected to MongoDB Atlas');
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+  })
+  .catch(err => {
+    console.error('❌ MongoDB connection error:', err.message);
+    process.exit(1);
+  });
